@@ -48,7 +48,7 @@ VER_REV="$(grep 'set(FREERDP_VERSION_REVISION' CMakeLists.txt | sed 's/set(FREER
 VER_SFX="$(grep 'set(FREERDP_VERSION_SUFFIX' CMakeLists.txt | sed 's/set(FREERDP_VERSION_[^"]*"//g;s/".*//g')"
 VER_DATE="$(date +%Y%m%d)"
 
-PKG_VER="${VER_MAJ}.${VER_MIN}.${VER_REV}~${VER_SFX}~git${VER_DATE}+dfsg"
+PKG_VER="${VER_MAJ}.${VER_MIN}.${VER_REV}~${SER_SFX}~git${VER_DATE}+dfsg"
 PKG_DIR="${PKG_NAME}_${PKG_VER}"
 
 mkdir -p ${BDIR}
