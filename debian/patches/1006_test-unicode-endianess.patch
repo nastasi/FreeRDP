@@ -1,0 +1,99 @@
+Index: freerdp-1.2.0~git20141201+dfsg1/winpr/libwinpr/crt/test/TestUnicodeConversion.c
+===================================================================
+--- freerdp-1.2.0~git20141201+dfsg1.orig/winpr/libwinpr/crt/test/TestUnicodeConversion.c
++++ freerdp-1.2.0~git20141201+dfsg1/winpr/libwinpr/crt/test/TestUnicodeConversion.c
+@@ -4,6 +4,18 @@
+ #include <winpr/error.h>
+ #include <winpr/windows.h>
+ 
++#if defined(WIN32) || defined(WIN64)
++  #ifndef __LITTLE_ENDIAN
++    #define __LITTLE_ENDIAN 1234
++    #define __BIG_ENDIAN    4321
++  #endif
++  #ifndef __BYTE_ORDER
++    #define __BYTE_ORDER __LITTLE_ENDIAN
++  #endif
++#else
++  #include <endian.h>
++#endif
++
+ /* Letters */
+ 
+ static BYTE c_cedilla_UTF8[] = "\xC3\xA7\x00";
+@@ -116,6 +128,22 @@ void string_hexdump(BYTE* data, int leng
+ 	}
+ }
+ 
++void utf16_le_to_ne(BYTE *data, int length)
++{
++#if __BYTE_ORDER == __BIG_ENDIAN
++	int i;
++
++	for (i = 0; i < length / 2; i++)
++	{
++		BYTE c;
++
++		c = data[i * 2];
++		data[i * 2] = data[i * 2 + 1];
++		data[i * 2 + 1] = c;
++	}
++#endif
++}
++
+ int convert_utf8_to_utf16(BYTE* lpMultiByteStr, BYTE* expected_lpWideCharStr, int expected_cchWideChar)
+ {
+ 	int length;
+@@ -463,6 +491,7 @@ int TestUnicodeConversion(int argc, char
+ 	/* Letters */
+ 
+ 	printf("Letters\n");
++	utf16_le_to_ne(c_cedilla_UTF16, sizeof(c_cedilla_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(c_cedilla_UTF8, c_cedilla_UTF16, c_cedilla_cchWideChar) < 1)
+ 		return -1;
+@@ -473,6 +502,8 @@ int TestUnicodeConversion(int argc, char
+ 	/* English */
+ 
+ 	printf("English\n");
++	utf16_le_to_ne(en_Hello_UTF16, sizeof(en_Hello_UTF16));
++	utf16_le_to_ne(en_HowAreYou_UTF16, sizeof(en_HowAreYou_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(en_Hello_UTF8, en_Hello_UTF16, en_Hello_cchWideChar) < 1)
+ 		return -1;
+@@ -487,6 +518,8 @@ int TestUnicodeConversion(int argc, char
+ 	/* French */
+ 
+ 	printf("French\n");
++	utf16_le_to_ne(fr_Hello_UTF16, sizeof(fr_Hello_UTF16));
++	utf16_le_to_ne(fr_HowAreYou_UTF16, sizeof(fr_HowAreYou_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(fr_Hello_UTF8, fr_Hello_UTF16, fr_Hello_cchWideChar) < 1)
+ 		return -1;
+@@ -501,6 +534,8 @@ int TestUnicodeConversion(int argc, char
+ 	/* Russian */
+ 
+ 	printf("Russian\n");
++	utf16_le_to_ne(ru_Hello_UTF16, sizeof(ru_Hello_UTF16));
++	utf16_le_to_ne(ru_HowAreYou_UTF16, sizeof(ru_HowAreYou_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(ru_Hello_UTF8, ru_Hello_UTF16, ru_Hello_cchWideChar) < 1)
+ 		return -1;
+@@ -515,6 +550,8 @@ int TestUnicodeConversion(int argc, char
+ 	/* Arabic */
+ 
+ 	printf("Arabic\n");
++	utf16_le_to_ne(ar_Hello_UTF16, sizeof(ar_Hello_UTF16));
++	utf16_le_to_ne(ar_HowAreYou_UTF16, sizeof(ar_HowAreYou_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(ar_Hello_UTF8, ar_Hello_UTF16, ar_Hello_cchWideChar) < 1)
+ 		return -1;
+@@ -529,6 +566,8 @@ int TestUnicodeConversion(int argc, char
+ 	/* Chinese */
+ 
+ 	printf("Chinese\n");
++	utf16_le_to_ne(ch_Hello_UTF16, sizeof(ch_Hello_UTF16));
++	utf16_le_to_ne(ch_HowAreYou_UTF16, sizeof(ch_HowAreYou_UTF16));
+ 
+ 	if (convert_utf8_to_utf16(ch_Hello_UTF8, ch_Hello_UTF16, ch_Hello_cchWideChar) < 1)
+ 		return -1;

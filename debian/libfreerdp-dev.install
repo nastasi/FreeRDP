@@ -1,0 +1,4 @@
+usr/include
+*/winpr/include/winpr usr/include
+usr/lib/*/*.so
+usr/lib/*/pkgconfig

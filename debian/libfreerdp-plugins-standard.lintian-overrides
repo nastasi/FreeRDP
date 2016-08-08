@@ -1,0 +1,5 @@
+# FreeRDP extensions in /usr/lib/*/freerdp/ erroneously trigger
+# debhelper's makeshlibs script
+libfreerdp-plugins-standard: pkg-has-shlibs-control-file-but-no-actual-shared-libs
+libfreerdp-plugins-standard: postinst-has-useless-call-to-ldconfig
+libfreerdp-plugins-standard: postrm-has-useless-call-to-ldconfig

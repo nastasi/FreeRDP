@@ -1,0 +1,66 @@
+Index: freerdp-1.2.0~git20141201+dfsg1/client/common/file.c
+===================================================================
+--- freerdp-1.2.0~git20141201+dfsg1.orig/client/common/file.c
++++ freerdp-1.2.0~git20141201+dfsg1/client/common/file.c
+@@ -45,6 +45,18 @@
+ #include <freerdp/log.h>
+ #define TAG CLIENT_TAG("common")
+ 
++#if defined(WIN32) || defined(WIN64)
++  #ifndef __LITTLE_ENDIAN
++    #define __LITTLE_ENDIAN 1234
++    #define __BIG_ENDIAN    4321
++  #endif
++  #ifndef __BYTE_ORDER
++    #define __BYTE_ORDER __LITTLE_ENDIAN
++  #endif
++#else
++  #include <endian.h>
++#endif
++
+ //#define DEBUG_CLIENT_FILE	1
+ 
+ static BYTE BOM_UTF16_LE[2] = { 0xFF, 0xFE };
+@@ -573,7 +585,8 @@ next_line:
+ static BOOL freerdp_client_parse_rdp_file_buffer_unicode(rdpFile* file, const BYTE* buffer, size_t size)
+ {
+ 	int index;
+-	int length;
++	int i, length;
++	BYTE* bufferne;
+ 	WCHAR* line;
+ 	WCHAR* type;
+ 	WCHAR* context;
+@@ -582,7 +595,20 @@ BOOL freerdp_client_parse_rdp_file_buffe
+ 	WCHAR *name, *value;
+ 
+ 	index = 0;
+-	line = wcstok_s((WCHAR*) buffer, CR_LF_STR_W, &context);
++
++#if __BYTE_ORDER == __BIG_ENDIAN
++	/* Convert the buffer from little endian to native endian */
++	bufferne = (BYTE*) malloc(size);
++	for (i = 0; i < size / 2; i++)
++	{
++		bufferne[i*2]  = buffer[i*2 + 1];
++		bufferne[i*2 + 1]  = buffer[i*2];
++	}
++#else
++	bufferne = buffer;
++#endif
++
++	line = wcstok_s((WCHAR*) bufferne, CR_LF_STR_W, &context);
+ 
+ 	while (line != NULL)
+ 	{
+@@ -646,6 +672,10 @@ next_line:
+ 		index++;
+ 	}
+ 
++#if __BYTE_ORDER == __BIG_ENDIAN
++	free(bufferne);
++#endif
++
+ 	return TRUE;
+ }
+ 

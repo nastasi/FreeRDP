@@ -1,0 +1,20 @@
+Index: freerdp-1.2.0~git20141201+dfsg1/cmake/FindFFmpeg.cmake
+===================================================================
+--- freerdp-1.2.0~git20141201+dfsg1.orig/cmake/FindFFmpeg.cmake
++++ freerdp-1.2.0~git20141201+dfsg1/cmake/FindFFmpeg.cmake
+@@ -17,11 +17,13 @@ endif()
+ 
+ # avcodec
+ find_path(AVCODEC_INCLUDE_DIR libavcodec/avcodec.h PATHS ${AVCODEC_INCLUDE_DIRS})
+-find_library(AVCODEC_LIBRARY avcodec PATHS ${AVCODEC_LIBRARY_DIRS})
++string(REPLACE "-l" "" avc_name "${AVCODEC_LIBRARIES}")
++find_library(AVCODEC_LIBRARY ${avc_name} avcodec PATHS ${AVCODEC_LIBRARY_DIRS})
+ 
+ # avutil
+ find_path(AVUTIL_INCLUDE_DIR libavutil/avutil.h PATHS ${AVUTIL_INCLUDE_DIRS})
+-find_library(AVUTIL_LIBRARY avutil PATHS ${AVUTIL_LIBRARY_DIRS})
++string(REPLACE "-l" "" avu_name "${AVUTIL_LIBRARIES}")
++find_library(AVUTIL_LIBRARY ${avu_name} avutil PATHS ${AVUTIL_LIBRARY_DIRS})
+ 
+ if(AVCODEC_INCLUDE_DIR AND AVCODEC_LIBRARY)
+ 	set(AVCODEC_FOUND TRUE)
