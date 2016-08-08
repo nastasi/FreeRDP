@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 set -e
 usage () {
     echo "$0 [<-s|--sersfx> <numerical_series_suffix>] [-d|--dev]"
@@ -48,7 +48,7 @@ VER_REV="$(grep 'set(FREERDP_VERSION_REVISION' CMakeLists.txt | sed 's/set(FREER
 VER_SFX="$(grep 'set(FREERDP_VERSION_SUFFIX' CMakeLists.txt | sed 's/set(FREERDP_VERSION_[^"]*"//g;s/".*//g')"
 VER_DATE="$(date +%Y%m%d)"
 
-PKG_VER="${VER_MAJ}.${VER_MIN}.${VER_REV}~${SER_SFX}~git${VER_DATE}+dfsg"
+PKG_VER="${VER_MAJ}.${VER_MIN}.${VER_REV}~${VER_SFX}~git${VER_DATE}+dfsg"
 PKG_DIR="${PKG_NAME}_${PKG_VER}"
 
 mkdir -p ${BDIR}
@@ -81,9 +81,9 @@ fi
 cat ${BDIR}/${PKG_DIR}/debian/changelog >> ${BDIR}/release.template
 cd ${BDIR}/${PKG_DIR}/
 tar zcvf "../${PKG_NAME}_${PKG_VER}.orig.tar.gz" .
-for serie in trusty wily xenial yakkety; do
+for serie in yakkety wily xenial trusty; do
     sed "s/#SeRiE#/$serie/g" < ../release.template >debian/changelog
-    debuild -S -sa
+    debuild -us -uc -S -sa
 done
 cd -
 rm ${BDIR}/release.template
