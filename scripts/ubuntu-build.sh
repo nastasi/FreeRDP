@@ -83,7 +83,7 @@ cd ${BDIR}/${PKG_DIR}/
 tar zcvf "../${PKG_NAME}_${PKG_VER}.orig.tar.gz" .
 for serie in yakkety wily xenial trusty; do
     sed "s/#SeRiE#/$serie/g" < ../release.template >debian/changelog
-    debuild -us -uc -S -sa
+    debuild -S -sa
 done
 cd -
 rm ${BDIR}/release.template
