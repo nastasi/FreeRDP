@@ -1,3 +1,5 @@
+=== BUILD PACKAGES ===
+
 You can build ubuntu packages with just 2 steps for Ubuntu series  `yakkety`, `wily`, `xenial` and  `trusty`.
 
 Before run the script `scripts/ubuntu-build.sh` you must have:
@@ -8,3 +10,8 @@ Before run the script `scripts/ubuntu-build.sh` you must have:
 Use the flag `-d` to build a development package; if you want to build an official version manage the `debian/changelog` file by hand.
 
 After that follow what the script tell you to upload packages.
+
+=== UPDATE PATCHES ===
+
+To manage debian patches you must use the `quilt` package, check documentation about it.
+
