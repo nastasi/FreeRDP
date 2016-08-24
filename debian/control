@@ -7,6 +7,7 @@ Uploaders:
  Laszlo Boszormenyi (GCS) <gcs@debian.hu>,
 Build-Depends:
  debhelper (>= 9),
+ devscripts,
  autotools-dev,
  cmake,
  libasound2-dev,
